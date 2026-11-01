@@ -13,6 +13,17 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 const isStringRecord = (value: unknown, fields: string[]) =>
   isRecord(value) && fields.every((field) => typeof value[field] === "string");
 
+const escapeHtml = (value: string) =>
+  value.replace(/[&<>"']/g, (character) => {
+    switch (character) {
+      case "&": return "&amp;";
+      case "<": return "&lt;";
+      case ">": return "&gt;";
+      case '"': return "&quot;";
+      default: return "&#39;";
+    }
+  });
+
 function isCv(value: unknown): value is Cv {
   if (!isRecord(value)) return false;
   const basicFields = [
@@ -68,8 +79,17 @@ export async function POST(request: Request) {
     return Response.json({ error: "La solicitud no contiene JSON válido." }, { status: 400 });
   }
 
-  if (!isRecord(payload) || !isCv(payload.cv)) {
-    return Response.json({ error: "Los datos del CV no tienen un formato válido." }, { status: 400 });
+  if (!isRecord(payload)) {
+    return Response.json({ error: "El contenido no tiene un formato válido." }, { status: 400 });
+  }
+
+  const cv = isCv(payload.cv) ? payload.cv : null;
+  const importedText = typeof payload.text === "string" ? payload.text.trim() : "";
+  if (!cv && !importedText) {
+    return Response.json({ error: "Pega texto de CV válido para generar el PDF." }, { status: 400 });
+  }
+  if (importedText.length > 100_000) {
+    return Response.json({ error: "El texto del CV excede los 100 000 caracteres permitidos." }, { status: 413 });
   }
 
   let browser: Awaited<ReturnType<typeof puppeteer.launch>> | undefined;
@@ -88,14 +108,17 @@ export async function POST(request: Request) {
           });
 
     const page = await browser.newPage();
-    const markup = renderHarvardHtml(payload.cv);
+    const markup = cv
+      ? `<div class="cv">${renderHarvardHtml(cv)}</div>`
+      : `<pre class="imported-cv">${escapeHtml(importedText)}</pre>`;
     await page.setContent(
       `<!doctype html><html lang="es"><head><meta charset="utf-8"><style>` +
         `@page{size:A4;margin:15mm 17mm}` +
         `html,body{margin:0;padding:0;background:#fff;height:auto;overflow:visible}` +
         HARVARD_CSS +
         `.cv{padding:0!important;width:auto!important;min-height:0!important}` +
-        `</style></head><body><div class="cv">${markup}</div></body></html>`,
+        `.imported-cv{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-family:Arial,Helvetica,sans-serif;font-size:12pt;line-height:1.4;color:#222}` +
+        `</style></head><body>${markup}</body></html>`,
       { waitUntil: "load" }
     );
     const pdf = await page.pdf({
@@ -108,7 +131,7 @@ export async function POST(request: Request) {
     return new Response(Buffer.from(pdf), {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${fileName(payload.cv)}"`,
+        "Content-Disposition": `attachment; filename="${cv ? fileName(cv) : "CV_Importado_ATS.pdf"}"`,
         "Cache-Control": "private, no-store",
       },
     });

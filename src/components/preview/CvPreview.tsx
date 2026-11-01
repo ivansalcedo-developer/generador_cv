@@ -33,6 +33,7 @@ export default function CvPreview({
   const [scale, setScale] = useState(1);
   const [pageCount, setPageCount] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
+  const [contentHeight, setContentHeight] = useState(PAPER_H);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -40,9 +41,11 @@ export default function CvPreview({
     if (!wrap || !paper) return;
     const calc = () => {
       const s = Math.min(1, (wrap.clientWidth || PAPER_W) / PAPER_W);
+      const rawH = paper.scrollHeight || PAPER_H;
+      setContentHeight(rawH);
       const pages = Math.max(
         1,
-        Math.ceil((paper.scrollHeight - PAGE_MARGIN_Y) / PRINTABLE_PAGE_H)
+        Math.ceil((rawH - PAGE_MARGIN_Y) / PRINTABLE_PAGE_H)
       );
       setScale(s);
       setPageCount(pages);
@@ -53,7 +56,7 @@ export default function CvPreview({
     ro.observe(wrap);
     ro.observe(paper);
     return () => ro.disconnect();
-  }, []);
+  }, [cv]);
 
   return (
     <>
@@ -95,32 +98,44 @@ export default function CvPreview({
           </div>
         )}
         <style>{HARVARD_CSS}</style>
-        <div
-          ref={wrapRef}
-          className="paper-scale"
-          style={{
-            height: PAPER_H * scale,
-            display: view === "doc" ? "block" : "none",
-          }}
-        >
-          <div
-            className="paper-page"
-            style={{ width: PAPER_W * scale, height: PAPER_H * scale }}
-          >
+        {(() => {
+          const pageDisplayHeight =
+            pageCount === 1 ? Math.max(PAPER_H, contentHeight) : PAPER_H;
+          return (
             <div
-              ref={paperRef}
-              className="paper"
+              ref={wrapRef}
+              className="paper-scale"
               style={{
-                transform: `scale(${scale}) translateY(-${currentPage * PRINTABLE_PAGE_H}px)`,
+                height: "auto",
+                minHeight: pageDisplayHeight * scale,
+                display: view === "doc" ? "block" : "none",
               }}
             >
-            {/* El PDF se genera a partir del HTML de este contenedor */}
-              <div id="cv-source">
-                <Harvard cv={cv} />
+              <div
+                className="paper-page"
+                style={{
+                  width: PAPER_W * scale,
+                  height: pageDisplayHeight * scale,
+                  minHeight: PAPER_H * scale,
+                }}
+              >
+                <div
+                  ref={paperRef}
+                  className="paper"
+                  style={{
+                    minHeight: pageDisplayHeight,
+                    transform: `scale(${scale}) translateY(-${currentPage * PRINTABLE_PAGE_H}px)`,
+                  }}
+                >
+                  {/* El PDF se genera a partir del HTML de este contenedor */}
+                  <div id="cv-source">
+                    <Harvard cv={cv} />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          );
+        })()}
         {view === "ats" && <pre className="ats">{cvToText(cv)}</pre>}
       </div>
     </>
