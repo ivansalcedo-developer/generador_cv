@@ -12,11 +12,9 @@ import StepSummary from "./StepSummary";
 import StepFinish from "./StepFinish";
 import CvPreview from "@/components/preview/CvPreview";
 import Toast from "@/components/ui/Toast";
-import { HARVARD_CSS } from "@/templates/harvardCss";
 import { cvToText } from "@/lib/cvToText";
 import { copyText } from "@/lib/clipboard";
 import { fileName } from "@/lib/fileName";
-import { printPdf } from "@/lib/printPdf";
 
 export default function Editor() {
   const api = useCv();
@@ -24,6 +22,7 @@ export default function Editor() {
 
   const [view, setView] = useState<"doc" | "ats">("doc");
   const [mobile, setMobile] = useState<"edit" | "preview">("edit");
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [toast, setToast] = useState("");
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -41,23 +40,39 @@ export default function Editor() {
     [setStep]
   );
 
-  const onPrint = () => {
-    const el = document.getElementById("cv-source");
-    if (!el) {
-      notify("No se encontró el CV para imprimir");
-      return;
+  const onDownloadPdf = async () => {
+    setIsGeneratingPdf(true);
+    try {
+      const response = await fetch("/api/pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cv }),
+      });
+      if (!response.ok) {
+        const result = (await response.json()) as { error?: string };
+        throw new Error(result.error || "No se pudo generar el PDF.");
+      }
+
+      const pdf = await response.blob();
+      const url = URL.createObjectURL(pdf);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName(cv);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      notify("Descarga del PDF iniciada");
+    } catch (error) {
+      console.error("Error al descargar el PDF.", error);
+      notify(error instanceof Error ? error.message : "No se pudo generar el PDF.");
+    } finally {
+      setIsGeneratingPdf(false);
     }
-    printPdf({ html: el.innerHTML, css: HARVARD_CSS, fileName: fileName(cv) });
   };
 
   const onCopy = async () => {
     notify((await copyText(cvToText(cv))) ? "Texto copiado" : "No se pudo copiar");
-  };
-
-  const onShowAts = () => {
-    setView("ats");
-    setMobile("preview");
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const onSample = () => {
@@ -142,15 +157,19 @@ export default function Editor() {
               go={go}
               setOferta={(v) => api.setText("oferta", v)}
               setArea={(v) => api.setText("area", v)}
-              onPrint={onPrint}
-              onCopy={onCopy}
-              onShowAts={onShowAts}
             />
           )}
         </section>
 
         <aside className="preview-col">
-          <CvPreview cv={cv} view={view} onView={setView} />
+          <CvPreview
+            cv={cv}
+            view={view}
+            onView={setView}
+            onDownloadPdf={onDownloadPdf}
+            isGeneratingPdf={isGeneratingPdf}
+            onCopy={onCopy}
+          />
         </aside>
       </main>
 

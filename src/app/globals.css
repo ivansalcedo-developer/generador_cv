@@ -58,14 +58,19 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .editor h1 { font-family: var(--display); font-weight: 600; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 6px; }
 .editor .lead { color: var(--muted); margin: 0 0 24px; max-width: 56ch; }
 .preview-col { position: sticky; top: 96px; }
-.preview-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; }
+.preview-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
 .preview-bar span { color: var(--muted); font-size: 13px; }
+.preview-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .view-toggle { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
 .view-toggle button { border: 0; background: transparent; padding: 6px 12px; cursor: pointer; font-size: 13px; color: var(--muted); }
 .view-toggle button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
-.paper-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; overflow: hidden; }
+.paper-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; max-height: calc(100vh - 190px); overflow-x: hidden; overflow-y: auto; }
 .paper-scale { width: 100%; position: relative; }
-.paper { width: 874px; min-height: 1123px; background: #fff; color: #111; transform-origin: top left; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18); position: absolute; left: 0; top: 0; }
+.page-navigation { display: flex; justify-content: center; gap: 6px; margin-bottom: 12px; }
+.page-navigation button { min-width: 34px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+.page-navigation button[aria-current="page"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.paper-page { position: relative; overflow: hidden; margin: 0 auto; background: #fff; outline: 1px solid #b8bec3; outline-offset: -1px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18); }
+.paper { width: 794px; min-height: 1123px; background: #fff; color: #111; transform-origin: top left; position: absolute; left: 0; top: 0; }
 .ats { margin: 0; white-space: pre-wrap; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; background: var(--surface); border-radius: 6px; padding: 16px; max-height: 70vh; overflow: auto; border: 1px solid var(--line); }
 
 /* ---------- Formulario ---------- */

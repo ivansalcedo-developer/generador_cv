@@ -15,6 +15,14 @@ export default function Home() {
         <Link href="/importar-ats" className="btn primary">
           Importar desde ATS
         </Link>
+        <a
+          href="https://www.zerogpt.com/"
+          className="btn primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ortografía
+        </a>
       </div>
     </main>
   );

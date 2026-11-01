@@ -11,12 +11,9 @@ type Props = {
   go: (n: number) => void;
   setOferta: (v: string) => void;
   setArea: (v: string) => void;
-  onPrint: () => void;
-  onCopy: () => void;
-  onShowAts: () => void;
 };
 
-export default function StepFinish({ cv, step, go, setOferta, setArea, onPrint, onCopy, onShowAts }: Props) {
+export default function StepFinish({ cv, step, go, setOferta, setArea }: Props) {
   return (
     <>
       <h1>Tu CV está listo para revisar</h1>
@@ -47,15 +44,6 @@ export default function StepFinish({ cv, step, go, setOferta, setArea, onPrint, 
         oferta pide Word o PDF, y no inventes cifras ni funciones.
       </div>
 
-      <div className="nav" style={{ marginTop: 8 }}>
-        <button type="button" className="btn primary" onClick={onPrint}>Descargar PDF</button>
-        <button type="button" className="btn" onClick={onCopy}>Copiar texto plano</button>
-        <button type="button" className="btn" onClick={onShowAts}>Ver lo que lee el ATS</button>
-      </div>
-      <p className="hint" style={{ marginTop: 14 }}>
-        En la ventana de impresión elige «Guardar como PDF» y desactiva «Encabezados y pies de
-        página».
-      </p>
       <Nav step={step} go={go} />
     </>
   );

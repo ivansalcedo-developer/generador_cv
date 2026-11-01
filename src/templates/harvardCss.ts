@@ -3,7 +3,7 @@
  * Se usan en la vista previa y también dentro del documento que se imprime a PDF.
  */
 export const HARVARD_CSS = `
-.cv{font-family:Arial,Helvetica,sans-serif;font-size:14.25pt;line-height:1.4;color:#444;padding:48px 56px}
+.cv{font-family:Arial,Helvetica,sans-serif;font-size:12pt;line-height:1.4;color:#444;padding:56.7px 64.25px}
 .cv .name{text-align:center;font-weight:700;font-size:13pt;color:#222;text-transform:uppercase;margin:0 0 4px}
 .cv .role{text-align:center;color:#555;margin:0 0 4px}
 .cv .contact{text-align:center;color:#555;font-size:10pt;line-height:1.5;margin:6px 0 22px}
