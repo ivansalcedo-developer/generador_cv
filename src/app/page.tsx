@@ -8,9 +8,14 @@ export default function Home() {
         Formato Harvard de una columna, texto real en el PDF, verbos de acción por área y
         comparador con la oferta de trabajo.
       </p>
-      <Link href="/editor" className="btn primary">
-        Crear mi CV
-      </Link>
+      <div className="home-actions">
+        <Link href="/editor" className="btn primary">
+          Crear CV manual
+        </Link>
+        <Link href="/importar-ats" className="btn primary">
+          Importar desde ATS
+        </Link>
+      </div>
     </main>
   );
 }

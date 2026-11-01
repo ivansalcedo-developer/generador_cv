@@ -6,7 +6,7 @@ import Harvard from "@/templates/Harvard";
 import { HARVARD_CSS } from "@/templates/harvardCss";
 import { cvToText } from "@/lib/cvToText";
 
-const PAPER_W = 794; // A4 a 96 dpi
+const PAPER_W = 874;
 const PAPER_H = 1123;
 
 type Props = { cv: Cv; view: "doc" | "ats"; onView: (v: "doc" | "ats") => void };

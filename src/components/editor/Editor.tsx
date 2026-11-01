@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import Link from "next/link";
 import { useCv } from "@/hooks/useCv";
 import Stepper from "./Stepper";
 import StepHeader from "./StepHeader";
@@ -64,9 +65,7 @@ export default function Editor() {
     notify("Ejemplo cargado");
   };
 
-  const onReset = () => {
-    if (window.confirm("¿Borrar todos los datos de tu CV?")) api.reset();
-  };
+  const onReset = () => api.reset();
 
   if (!ready) {
     return (
@@ -80,7 +79,9 @@ export default function Editor() {
     <div className={`app m-${mobile}`}>
       <header className="top">
         <div className="top-in">
-          <div className="brand">Mi CV</div>
+          <Link href="/" className="brand">
+            Creación de CV Harvard
+          </Link>
           <Stepper step={step} onGo={go} />
         </div>
       </header>
