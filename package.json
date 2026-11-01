@@ -9,17 +9,21 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@sparticuz/chromium": "^153.0.0",
+    "docx": "^9.15.1",
     "next": "16.4.3",
+    "puppeteer-core": "^25.16.0",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^26.6.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.5"
   }
 }
