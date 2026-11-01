@@ -1,32 +1,17 @@
 :root {
-  --bg: #edf1f4;
-  --surface: #ffffff;
-  --ink: #16212b;
-  --muted: #5a6978;
-  --line: #d5dde4;
-  --accent: #0e6b66;
+  --bg: rgb(19, 21, 22);
+  --surface: #1b1e20;
+  --ink: #f1f3f4;
+  --muted: #a7afb4;
+  --line: #343a3e;
+  --accent: rgb(8, 70, 104);
   --accent-ink: #ffffff;
-  --accent-soft: #dceeec;
-  --warn: #9a5b00;
-  --ok: #17794a;
-  --panel: #f7f9fb;
+  --accent-soft: #173342;
+  --warn: #e3a650;
+  --ok: #5ccb92;
+  --panel: #171a1c;
   --ui: "Public Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
   --display: "Newsreader", Georgia, "Times New Roman", serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f161c;
-    --surface: #18222b;
-    --ink: #e7edf2;
-    --muted: #9aa9b7;
-    --line: #2b3946;
-    --accent: #4fc2b9;
-    --accent-ink: #06201e;
-    --accent-soft: #17353a;
-    --warn: #e3a650;
-    --ok: #5ccb92;
-    --panel: #1c2832;
-  }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
