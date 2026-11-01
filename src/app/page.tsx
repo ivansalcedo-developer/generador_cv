@@ -16,7 +16,7 @@ export default function Home() {
           Importar desde ATS
         </Link>
         <a
-          href="https://www.zerogpt.com/"
+          href="https://www.zerogpt.com/es/grammar-checker"
           className="btn primary"
           target="_blank"
           rel="noopener noreferrer"
