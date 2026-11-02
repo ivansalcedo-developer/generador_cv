@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  serverExternalPackages: ["scribe.js-ocr"],
 };
 
 export default nextConfig;

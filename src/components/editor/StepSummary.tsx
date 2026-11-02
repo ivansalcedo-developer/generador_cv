@@ -6,6 +6,7 @@ export default function StepSummary({ value, onChange, step, go }: Props) {
   const words = value.trim() ? value.trim().split(/\s+/).length : 0;
   return (
     <>
+      <Nav step={step} go={go} />
       <h1>Escribe tu perfil profesional</h1>
       <p className="lead">
         Tres o cuatro frases: quién eres, qué estudias o dominas y qué buscas.
@@ -25,7 +26,6 @@ export default function StepSummary({ value, onChange, step, go }: Props) {
         <strong>Una buena fórmula:</strong> tu situación actual + áreas de interés + 2 o 3
         fortalezas + el tipo de oportunidad que buscas. Entre 40 y 80 palabras funciona bien.
       </div>
-      <Nav step={step} go={go} />
     </>
   );
 }

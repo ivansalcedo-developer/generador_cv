@@ -16,6 +16,7 @@ type Props = {
 export default function StepFinish({ cv, step, go, setOferta, setArea }: Props) {
   return (
     <>
+      <Nav step={step} go={go} />
       <h1>Tu CV está listo para revisar</h1>
       <p className="lead">
         Revisa los puntos de abajo y descarga el PDF. El archivo contiene texto real, por eso las
@@ -43,8 +44,6 @@ export default function StepFinish({ cv, step, go, setOferta, setArea }: Props) 
         <strong>Antes de enviar:</strong> personaliza el CV para cada postulación, revisa si la
         oferta pide Word o PDF, y no inventes cifras ni funciones.
       </div>
-
-      <Nav step={step} go={go} />
     </>
   );
 }

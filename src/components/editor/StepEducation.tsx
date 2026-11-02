@@ -15,6 +15,7 @@ type Props = {
 export default function StepEducation({ cv, step, go, updateEdu, addEdu, removeEdu, setCursos }: Props) {
   return (
     <>
+      <Nav step={step} go={go} />
       <h1>Formación, cursos y certificaciones</h1>
       <p className="lead">
         Incluye tu estudio principal primero. Si aún no terminas, escribe «En curso».
@@ -66,7 +67,6 @@ export default function StepEducation({ cv, step, go, updateEdu, addEdu, removeE
           onChange={setCursos}
         />
       </div>
-      <Nav step={step} go={go} />
     </>
   );
 }

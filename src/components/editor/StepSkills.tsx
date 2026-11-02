@@ -30,6 +30,7 @@ export default function StepSkills({ cv, step, go, setHerr, setPers, setSkills }
 
   return (
     <>
+      <Nav step={step} go={go} />
       <h1>Herramientas, idiomas y competencias</h1>
       <p className="lead">Usa los mismos términos que aparecen en las ofertas que te interesan.</p>
 
@@ -104,7 +105,6 @@ export default function StepSkills({ cv, step, go, setHerr, setPers, setSkills }
           onChange={setPers}
         />
       </div>
-      <Nav step={step} go={go} />
     </>
   );
 }

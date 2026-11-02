@@ -34,6 +34,7 @@ export default function StepExperience({ cv, step, go, updateExp, addExp, remove
 
   return (
     <>
+      <Nav step={step} go={go} />
       <h1>Cuéntanos tu experiencia profesional</h1>
       <p className="lead">
         Empieza por el trabajo más reciente. Escribe una función o un logro por línea; cada línea
@@ -97,7 +98,6 @@ export default function StepExperience({ cv, step, go, updateExp, addExp, remove
       <button type="button" className="btn" onClick={addExp}>
         + Añadir otra experiencia
       </button>
-      <Nav step={step} go={go} />
     </>
   );
 }

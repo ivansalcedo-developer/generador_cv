@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import Link from "next/link";
 import { useCv } from "@/hooks/useCv";
 import Stepper from "./Stepper";
 import StepHeader from "./StepHeader";
@@ -15,6 +14,7 @@ import Toast from "@/components/ui/Toast";
 import { cvToText } from "@/lib/cvToText";
 import { copyText } from "@/lib/clipboard";
 import { fileName } from "@/lib/fileName";
+import StickyHeader from "@/components/ui/StickyHeader";
 
 export default function Editor() {
   const api = useCv();
@@ -92,14 +92,9 @@ export default function Editor() {
 
   return (
     <div className={`app m-${mobile}`}>
-      <header className="top">
-        <div className="top-in">
-          <Link href="/" className="brand">
-            Creación de CV Harvard
-          </Link>
-          <Stepper step={step} onGo={go} />
-        </div>
-      </header>
+      <StickyHeader onClear={onReset}>
+        <Stepper cv={cv} step={step} onGo={go} />
+      </StickyHeader>
 
       <div className="mobile-tabs">
         <button type="button" aria-pressed={mobile === "edit"} onClick={() => setMobile("edit")}>
@@ -113,7 +108,7 @@ export default function Editor() {
       <main className="layout">
         <section className="editor">
           {step === 0 && (
-            <StepHeader b={cv.b} setB={api.setB} onNext={() => go(1)} onSample={onSample} onReset={onReset} />
+            <StepHeader b={cv.b} setB={api.setB} onNext={() => go(1)} onSample={onSample} />
           )}
           {step === 1 && (
             <StepExperience

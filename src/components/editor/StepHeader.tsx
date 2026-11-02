@@ -6,12 +6,15 @@ type Props = {
   setB: (k: keyof Basics, v: string) => void;
   onNext: () => void;
   onSample: () => void;
-  onReset: () => void;
 };
 
-export default function StepHeader({ b, setB, onNext, onSample, onReset }: Props) {
+export default function StepHeader({ b, setB, onNext, onSample }: Props) {
   return (
     <>
+      <div className="nav nav-top">
+        <button type="button" className="btn" onClick={onSample}>Cargar un ejemplo</button>
+        <button type="button" className="btn primary spacer" onClick={onNext}>Continuar</button>
+      </div>
       <h1>Empecemos por tus datos de contacto</h1>
       <p className="lead">
         Escribe tu nombre completo y al menos una forma de contacto. Todo se refleja de
@@ -48,11 +51,6 @@ export default function StepHeader({ b, setB, onNext, onSample, onReset }: Props
         algunas empresas prefieren no recibirla.
       </div>
 
-      <div className="nav">
-        <button type="button" className="btn" onClick={onSample}>Cargar un ejemplo</button>
-        <button type="button" className="btn link" onClick={onReset}>Borrar todo</button>
-        <button type="button" className="btn primary spacer" onClick={onNext}>Continuar</button>
-      </div>
     </>
   );
 }

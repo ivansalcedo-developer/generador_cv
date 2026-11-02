@@ -9,6 +9,7 @@ import { cvToText } from "@/lib/cvToText";
 const PAPER_W = 794;
 const PAPER_H = 1123;
 const PAGE_MARGIN_Y = (15 / 25.4) * 96;
+const PAGE_MARGIN_X = (17 / 25.4) * 96;
 const PRINTABLE_PAGE_H = PAPER_H - PAGE_MARGIN_Y * 2;
 
 type Props = {
@@ -30,19 +31,18 @@ export default function CvPreview({
 }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [pageCount, setPageCount] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
-  const [contentHeight, setContentHeight] = useState(PAPER_H);
 
   useEffect(() => {
     const wrap = wrapRef.current;
-    const paper = paperRef.current;
-    if (!wrap || !paper) return;
+    const measure = measureRef.current?.querySelector(".cv");
+    if (!wrap || !measure) return;
     const calc = () => {
       const s = Math.min(1, (wrap.clientWidth || PAPER_W) / PAPER_W);
-      const rawH = paper.scrollHeight || PAPER_H;
-      setContentHeight(rawH);
+      const rawH = measure.scrollHeight || PAPER_H;
       const pages = Math.max(
         1,
         Math.ceil((rawH - PAGE_MARGIN_Y) / PRINTABLE_PAGE_H)
@@ -54,7 +54,7 @@ export default function CvPreview({
     calc();
     const ro = new ResizeObserver(calc);
     ro.observe(wrap);
-    ro.observe(paper);
+    ro.observe(measure);
     return () => ro.disconnect();
   }, [cv]);
 
@@ -81,7 +81,7 @@ export default function CvPreview({
         </div>
       </div>
 
-      <div className="paper-wrap">
+      <div className="paper-viewer">
         {view === "doc" && (
           <div className="page-navigation" role="group" aria-label="Páginas de la vista previa">
             {Array.from({ length: pageCount }, (_, page) => (
@@ -97,46 +97,54 @@ export default function CvPreview({
             ))}
           </div>
         )}
-        <style>{HARVARD_CSS}</style>
-        {(() => {
-          const pageDisplayHeight =
-            pageCount === 1 ? Math.max(PAPER_H, contentHeight) : PAPER_H;
-          return (
+        <div className="paper-wrap">
+          <style>{HARVARD_CSS}</style>
+          <style>{`
+            .paper-paged .cv {
+              box-sizing: border-box;
+              width: ${pageCount * PAPER_W}px;
+              height: ${PAPER_H}px;
+              column-count: ${pageCount};
+              column-gap: ${PAGE_MARGIN_X * 2}px;
+              column-fill: auto;
+            }
+          `}</style>
+          <div
+            ref={wrapRef}
+            className="paper-scale"
+            style={{
+              minHeight: PAPER_H * scale,
+              display: view === "doc" ? "block" : "none",
+            }}
+          >
             <div
-              ref={wrapRef}
-              className="paper-scale"
+              className="paper-page"
               style={{
-                height: "auto",
-                minHeight: pageDisplayHeight * scale,
-                display: view === "doc" ? "block" : "none",
+                width: PAPER_W * scale,
+                height: PAPER_H * scale,
+                minHeight: PAPER_H * scale,
               }}
             >
               <div
-                className="paper-page"
+                ref={paperRef}
+                className="paper paper-paged"
                 style={{
-                  width: PAPER_W * scale,
-                  height: pageDisplayHeight * scale,
-                  minHeight: PAPER_H * scale,
+                  width: PAPER_W * pageCount,
+                  height: PAPER_H,
+                  transform: `scale(${scale}) translateX(-${currentPage * PAPER_W}px)`,
                 }}
               >
-                <div
-                  ref={paperRef}
-                  className="paper"
-                  style={{
-                    minHeight: pageDisplayHeight,
-                    transform: `scale(${scale}) translateY(-${currentPage * PRINTABLE_PAGE_H}px)`,
-                  }}
-                >
-                  {/* El PDF se genera a partir del HTML de este contenedor */}
-                  <div id="cv-source">
-                    <Harvard cv={cv} />
-                  </div>
+                <div id="cv-source">
+                  <Harvard cv={cv} />
                 </div>
               </div>
             </div>
-          );
-        })()}
-        {view === "ats" && <pre className="ats">{cvToText(cv)}</pre>}
+          </div>
+          {view === "ats" && <pre className="ats">{cvToText(cv)}</pre>}
+        </div>
+      </div>
+      <div ref={measureRef} className="paper-measure" aria-hidden="true">
+        <Harvard cv={cv} />
       </div>
     </>
   );
